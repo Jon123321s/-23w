@@ -1,0 +1,80 @@
+#include <iostream>
+#include <map>
+
+// Функция для преобразования римской цифры в целое число
+int romanToInt(std::string s) {
+    // Создаем карту, где ключ - римская цифра, значение - ее числовое представление
+    std::map<char, int> romanMap;
+    romanMap['I'] = 1;
+    romanMap['V'] = 5;
+    romanMap['X'] = 10;
+    romanMap['L'] = 50;
+    romanMap['C'] = 100;
+    romanMap['D'] = 500;
+    romanMap['M'] = 1000;
+
+    int result = 0;
+    int prev = 0;
+
+    // Проходим по римской цифре справа налево
+    for (int i = s.length() - 1; i >= 0; i--) {
+        int current = romanMap[s[i]];
+
+        // Если текущее число меньше предыдущего, значит требуется вычитание
+        if (current < prev) {
+            result -= current;
+        }
+        // Иначе прибавляем текущее число к результату
+        else {
+            result += current;
+        }
+
+        prev = current;
+    }
+
+    return result;
+}
+
+// Функция для преобразования целого числа в римскую цифру
+std::string intToRoman(int num) {
+    // Создаем карту, где ключ - числовое представление, значение - римская цифра
+    std::map<int, std::string> romanMap;
+    romanMap[1] = "I";
+    romanMap[4] = "IV";
+    romanMap[5] = "V";
+    romanMap[9] = "IX";
+    romanMap[10] = "X";
+    romanMap[40] = "XL";
+    romanMap[50] = "L";
+    romanMap[90] = "XC";
+    romanMap[100] = "C";
+    romanMap[400] = "CD";
+    romanMap[500] = "D";
+    romanMap[900] = "CM";
+    romanMap[1000] = "M";
+
+    std::string result = "";
+
+    // Проходим по числу, начиная с наибольших римских цифр
+    for (auto it = romanMap.rbegin(); it != romanMap.rend(); it++) {
+        // Пока число больше или равно текущей римской цифре, добавляем ее к результату
+        while (num >= it->first) {
+            result += it->second;
+            num -= it->first;
+        }
+    }
+
+    return result;
+}
+
+int main() {
+    std::string romanNumeral = "XXVII";
+    int decimalNum = romanToInt(romanNumeral);
+    std::cout << romanNumeral << " в десятичной системе: " << decimalNum << std::endl;
+
+    int num = 27;
+    std::string romanNum = intToRoman(num);
+    std::cout << num << " в римской системе: " << romanNum << std::endl;
+
+    return 0;
+}
